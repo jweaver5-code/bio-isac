@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Own AI - BioShield AI</title>
+    
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous"
+    />
+    
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./styles/main.css">
+    <style>
+        .config-card {
+            transition: all 0.3s ease;
+        }
+        .config-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .slider-container {
+            margin: 20px 0;
+        }
+        .slider-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        .weight-sum {
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .weight-sum.valid {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .weight-sum.invalid {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shield-check"></i> BioShield AI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="all-threats.html"><i class="bi bi-list-ul"></i> All Threats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="past-trends.html"><i class="bi bi-clock-history"></i> Past Trends</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="own-ai.html"><i class="bi bi-robot"></i> Own AI</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="analytics.html"><i class="bi bi-graph-up"></i> Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="data-sources.html"><i class="bi bi-database"></i> Data Sources</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="settings.html"><i class="bi bi-gear"></i> Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2><i class="bi bi-robot"></i> Own AI Configuration</h2>
+                <p class="text-muted">Customize how the AI rates and prioritizes threats based on your organization's needs.</p>
+            </div>
+        </div>
+
+        <!-- Info Alert -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h5 class="alert-heading"><i class="bi bi-info-circle"></i> How It Works</h5>
+                    <p class="mb-0">
+                        Adjust the weights below to customize how the AI calculates threat priority scores. 
+                        The weights for Bio-Relevance, CVSS Score, and Human Impact must sum to 1.0. 
+                        The Sole Source Multiplier increases the priority of threats affecting systems with no alternatives.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration Form -->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card config-card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-sliders"></i> AI Rating Parameters</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="aiConfigForm">
+                            <!-- Bio-Relevance Weight -->
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <strong>Bio-Relevance Weight</strong>
+                                    <span class="slider-value" id="bioRelevanceValue">0.4</span>
+                                </label>
+                                <p class="text-muted small">
+                                    How much weight to give biological/biotech relevance in the scoring algorithm.
+                                </p>
+                                <input type="range" class="form-range" id="bioRelevanceWeight" 
+                                       min="0" max="1" step="0.05" value="0.4" 
+                                       oninput="updateSliderValue('bioRelevanceWeight', 'bioRelevanceValue'); checkWeightSum();">
+                                <div class="d-flex justify-content-between">
+                                    <small>0.0 (Low)</small>
+                                    <small>1.0 (High)</small>
+                                </div>
+                            </div>
+
+                            <!-- CVSS Weight -->
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <strong>CVSS Score Weight</strong>
+                                    <span class="slider-value" id="cvssWeightValue">0.3</span>
+                                </label>
+                                <p class="text-muted small">
+                                    How much weight to give the standard CVSS (Common Vulnerability Scoring System) score.
+                                </p>
+                                <input type="range" class="form-range" id="cvssWeight" 
+                                       min="0" max="1" step="0.05" value="0.3" 
+                                       oninput="updateSliderValue('cvssWeight', 'cvssWeightValue'); checkWeightSum();">
+                                <div class="d-flex justify-content-between">
+                                    <small>0.0 (Low)</small>
+                                    <small>1.0 (High)</small>
+                                </div>
+                            </div>
+
+                            <!-- Human Impact Weight -->
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <strong>Human Impact Weight</strong>
+                                    <span class="slider-value" id="humanImpactWeightValue">0.3</span>
+                                </label>
+                                <p class="text-muted small">
+                                    How much weight to give potential human/patient safety impact.
+                                </p>
+                                <input type="range" class="form-range" id="humanImpactWeight" 
+                                       min="0" max="1" step="0.05" value="0.3" 
+                                       oninput="updateSliderValue('humanImpactWeight', 'humanImpactWeightValue'); checkWeightSum();">
+                                <div class="d-flex justify-content-between">
+                                    <small>0.0 (Low)</small>
+                                    <small>1.0 (High)</small>
+                                </div>
+                            </div>
+
+                            <!-- Weight Sum Display -->
+                            <div class="mb-4">
+                                <div class="weight-sum" id="weightSumDisplay">
+                                    <i class="bi bi-calculator"></i> Total Weight: <span id="weightSum">1.0</span>
+                                </div>
+                                <small class="text-muted">The three weights above must sum to exactly 1.0</small>
+                            </div>
+
+                            <!-- Sole Source Multiplier -->
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <strong>Sole Source Multiplier</strong>
+                                    <span class="slider-value" id="soleSourceMultiplierValue">1.5</span>
+                                </label>
+                                <p class="text-muted small">
+                                    Multiplier applied to threats affecting systems with no alternative vendors/solutions.
+                                </p>
+                                <input type="range" class="form-range" id="soleSourceMultiplier" 
+                                       min="1.0" max="3.0" step="0.1" value="1.5" 
+                                       oninput="updateSliderValue('soleSourceMultiplier', 'soleSourceMultiplierValue');">
+                                <div class="d-flex justify-content-between">
+                                    <small>1.0x (No Boost)</small>
+                                    <small>3.0x (Maximum Boost)</small>
+                                </div>
+                            </div>
+
+                            <!-- Bio-Relevance Threshold -->
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <strong>Bio-Relevance Threshold</strong>
+                                    <span class="slider-value" id="bioRelevanceThresholdValue">0.6</span>
+                                </label>
+                                <p class="text-muted small">
+                                    Minimum bio-relevance score required for a threat to be displayed (filters out irrelevant threats).
+                                </p>
+                                <input type="range" class="form-range" id="bioRelevanceThreshold" 
+                                       min="0" max="1" step="0.05" value="0.6" 
+                                       oninput="updateSliderValue('bioRelevanceThreshold', 'bioRelevanceThresholdValue');">
+                                <div class="d-flex justify-content-between">
+                                    <small>0.0 (Show All)</small>
+                                    <small>1.0 (Very Strict)</small>
+                                </div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary" id="saveBtn">
+                                    <i class="bi bi-save"></i> Save Configuration
+                                </button>
+                                <button type="button" class="btn btn-secondary" onclick="resetToDefaults()">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset to Defaults
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Current Configuration -->
+                <div class="card mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-info-circle"></i> Current Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="currentConfig">
+                            <p class="text-muted">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Help Card -->
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-question-circle"></i> Tips</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="bi bi-lightbulb text-warning"></i>
+                                <strong>Higher Bio-Relevance Weight:</strong> Focus more on biotech-specific threats
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-lightbulb text-warning"></i>
+                                <strong>Higher CVSS Weight:</strong> Rely more on standard security scoring
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-lightbulb text-warning"></i>
+                                <strong>Higher Human Impact Weight:</strong> Prioritize patient safety concerns
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-lightbulb text-warning"></i>
+                                <strong>Higher Threshold:</strong> Show fewer, more relevant threats
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"
+    ></script>
+
+    <!-- Custom JS -->
+    <script src="./scripts/own-ai.js"></script>
+</body>
+</html>
+

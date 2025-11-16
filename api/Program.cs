@@ -1,5 +1,6 @@
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.StaticFiles;
+using api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Initialize database
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=database.db";
+DatabaseInitializer.Initialize(connectionString);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

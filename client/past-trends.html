@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Trends - BioShield AI</title>
+    
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous"
+    />
+    
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./styles/main.css">
+    <style>
+        .reviewed-badge {
+            background-color: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .rating-changed-indicator {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        .rating-diff-positive {
+            color: #dc3545;
+        }
+        .rating-diff-negative {
+            color: #28a745;
+        }
+        .rating-diff-neutral {
+            color: #6c757d;
+        }
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+        .sortable:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+        .sort-icon {
+            margin-left: 5px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shield-check"></i> BioShield AI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="all-threats.html"><i class="bi bi-list-ul"></i> All Threats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="past-trends.html"><i class="bi bi-clock-history"></i> Past Trends</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="own-ai.html"><i class="bi bi-robot"></i> Own AI</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="analytics.html"><i class="bi bi-graph-up"></i> Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="data-sources.html"><i class="bi bi-database"></i> Data Sources</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="settings.html"><i class="bi bi-gear"></i> Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2><i class="bi bi-clock-history"></i> Past Trends & Review History</h2>
+                <p class="text-muted">Analyze past threats, review AI ratings, and track your review progress over time.</p>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-subtitle mb-2 text-white-50">Total Threats</h6>
+                                <h2 class="card-title mb-0" id="totalThreats">0</h2>
+                            </div>
+                            <i class="bi bi-list-ul fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-subtitle mb-2 text-white-50">Reviewed</h6>
+                                <h2 class="card-title mb-0" id="reviewedCount">0</h2>
+                            </div>
+                            <i class="bi bi-check-circle fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-subtitle mb-2 text-white-50">Rating Changed</h6>
+                                <h2 class="card-title mb-0" id="ratingChangedCount">0</h2>
+                            </div>
+                            <i class="bi bi-pencil-square fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-subtitle mb-2 text-white-50">Review Progress</h6>
+                                <h2 class="card-title mb-0" id="reviewProgress">0%</h2>
+                            </div>
+                            <i class="bi bi-percent fs-1 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-graph-up"></i> Review Progress Over Time</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="reviewProgressChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Rating Changes Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="ratingChangesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Controls -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <label class="form-label">Filter:</label>
+                                <select class="form-select" id="filterSelect">
+                                    <option value="all">All Threats</option>
+                                    <option value="reviewed">Reviewed Only</option>
+                                    <option value="unreviewed">Unreviewed Only</option>
+                                    <option value="rating-changed">Rating Changed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Search:</label>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search CVE ID or title...">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Sort By:</label>
+                                <select class="form-select" id="sortSelect">
+                                    <option value="date-desc">Date (Newest First)</option>
+                                    <option value="date-asc">Date (Oldest First)</option>
+                                    <option value="rating-desc">Rating (Highest First)</option>
+                                    <option value="rating-asc">Rating (Lowest First)</option>
+                                    <option value="reviewed">Review Status</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button class="btn btn-primary w-100" onclick="loadPastTrends()">
+                                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Threats Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-table"></i> Threats Review Table</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="sortable" data-sort="cve">CVE ID <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                                        <th class="sortable" data-sort="title">Title <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                                        <th class="sortable" data-sort="aiRating">AI Rating <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                                        <th class="sortable" data-sort="userRating">Your Rating <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                                        <th>Difference</th>
+                                        <th class="sortable" data-sort="reviewed">Status <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                                        <th class="sortable" data-sort="date">Discovered <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="threatsTableBody">
+                                    <tr>
+                                        <td colspan="8" class="text-center py-5">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="noResults" class="text-center py-5" style="display: none;">
+                            <i class="bi bi-inbox fs-1 text-muted"></i>
+                            <p class="text-muted mt-3">No threats found matching your filters.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rating Edit Modal -->
+    <div class="modal fade" id="ratingModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Update Rating</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">CVE ID:</label>
+                        <input type="text" class="form-control" id="modalCveId" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Title:</label>
+                        <input type="text" class="form-control" id="modalTitle" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">AI Rating:</label>
+                        <input type="text" class="form-control" id="modalAiRating" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Your Rating (0.0 - 10.0):</label>
+                        <input type="number" class="form-control" id="modalUserRating" 
+                               min="0" max="10" step="0.1" required>
+                        <small class="form-text text-muted">Enter a rating between 0.0 and 10.0</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveRatingBtn">Save Rating</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"
+    ></script>
+
+    <!-- Custom JS -->
+    <script src="./scripts/past-trends.js"></script>
+</body>
+</html>
