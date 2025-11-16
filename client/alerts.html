@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerts - BioShield AI</title>
+    
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous"
+    />
+    
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shield-check"></i> BioShield AI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="all-threats.html"><i class="bi bi-list-ul"></i> All Threats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="alerts.html"><i class="bi bi-bell"></i> Alerts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="analytics.html"><i class="bi bi-graph-up"></i> Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="data-sources.html"><i class="bi bi-database"></i> Data Sources</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="settings.html"><i class="bi bi-gear"></i> Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h2><i class="bi bi-bell"></i> Alert Management</h2>
+                <p class="text-muted">Manage and configure security alerts with bio-relevance filtering</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#alertSettingsModal">
+                    <i class="bi bi-gear"></i> Alert Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Alert Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-danger">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-white-50">Unread Alerts</h6>
+                        <h2 class="card-title mb-0" id="unreadCount">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-white-50">Critical Alerts</h6>
+                        <h2 class="card-title mb-0" id="criticalAlertsCount">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-white-50">Today's Alerts</h6>
+                        <h2 class="card-title mb-0" id="todayAlertsCount">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-white-50">Acknowledged</h6>
+                        <h2 class="card-title mb-0" id="acknowledgedCount">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Filters -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <select class="form-select" id="alertStatusFilter">
+                            <option value="">All Status</option>
+                            <option value="unread">Unread</option>
+                            <option value="read">Read</option>
+                            <option value="acknowledged">Acknowledged</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="alertPriorityFilter">
+                            <option value="">All Priorities</option>
+                            <option value="Critical">Critical</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-secondary w-100" onclick="markAllAsRead()">
+                            <i class="bi bi-check-all"></i> Mark All Read
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-danger w-100" onclick="clearAllAlerts()">
+                            <i class="bi bi-trash"></i> Clear All
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts List -->
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="bi bi-bell-fill"></i> Active Alerts</h5>
+            </div>
+            <div class="card-body">
+                <div id="alertsList">
+                    <!-- Alerts will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Settings Modal -->
+    <div class="modal fade" id="alertSettingsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-gear"></i> Alert Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="alertSettingsForm">
+                        <div class="mb-3">
+                            <label class="form-label">Bio-Relevance Threshold</label>
+                            <input type="range" class="form-range" id="bioRelevanceThreshold" min="0" max="1" step="0.1" value="0.6">
+                            <div class="d-flex justify-content-between">
+                                <small>0.0 (All alerts)</small>
+                                <small id="thresholdValue">0.6</small>
+                                <small>1.0 (High relevance only)</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Minimum Severity</label>
+                            <select class="form-select" id="minSeverity">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High" selected>High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableEmailAlerts" checked>
+                                <label class="form-check-label" for="enableEmailAlerts">Email Alerts</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableQuietHours">
+                                <label class="form-check-label" for="enableQuietHours">Quiet Hours</label>
+                            </div>
+                        </div>
+                        <div class="mb-3" id="quietHoursSettings" style="display: none;">
+                            <label class="form-label">Quiet Hours</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="time" class="form-control" id="quietHoursStart" value="22:00">
+                                </div>
+                                <div class="col-6">
+                                    <input type="time" class="form-control" id="quietHoursEnd" value="06:00">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableDigestMode">
+                                <label class="form-check-label" for="enableDigestMode">Daily Digest Mode</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAlertSettings()">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"
+    ></script>
+
+    <!-- Custom JS -->
+    <script src="./scripts/alerts.js"></script>
+</body>
+</html>
+
+
+

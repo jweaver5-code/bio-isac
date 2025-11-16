@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - BioShield AI</title>
+    
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous"
+    />
+    
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-shield-check"></i> BioShield AI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="all-threats.html"><i class="bi bi-list-ul"></i> All Threats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="alerts.html"><i class="bi bi-bell"></i> Alerts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="analytics.html"><i class="bi bi-graph-up"></i> Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="data-sources.html"><i class="bi bi-database"></i> Data Sources</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="settings.html"><i class="bi bi-gear"></i> Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2><i class="bi bi-gear"></i> Settings & Preferences</h2>
+                <p class="text-muted">Configure your BioShield AI preferences and alert settings</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Alert Settings -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-bell"></i> Alert Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Bio-Relevance Threshold</label>
+                            <input type="range" class="form-range" id="bioRelevanceThreshold" min="0" max="1" step="0.1" value="0.6">
+                            <div class="d-flex justify-content-between">
+                                <small>0.0 (All alerts)</small>
+                                <small id="thresholdValue">0.6</small>
+                                <small>1.0 (High relevance only)</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Minimum Severity for Alerts</label>
+                            <select class="form-select" id="minSeverity">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High" selected>High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableEmailAlerts" checked>
+                                <label class="form-check-label" for="enableEmailAlerts">Enable Email Alerts</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableQuietHours">
+                                <label class="form-check-label" for="enableQuietHours">Enable Quiet Hours</label>
+                            </div>
+                        </div>
+                        <div class="mb-3" id="quietHoursSettings" style="display: none;">
+                            <label class="form-label">Quiet Hours</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label small">Start</label>
+                                    <input type="time" class="form-control" id="quietHoursStart" value="22:00">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small">End</label>
+                                    <input type="time" class="form-control" id="quietHoursEnd" value="06:00">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enableDigestMode">
+                                <label class="form-check-label" for="enableDigestMode">Daily Digest Mode</label>
+                            </div>
+                            <small class="text-muted">Receive one summary email per day instead of individual alerts</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Display Preferences -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="bi bi-display"></i> Display Preferences</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Items Per Page</label>
+                            <select class="form-select" id="itemsPerPage">
+                                <option value="10">10</option>
+                                <option value="25" selected>25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Default Time Range</label>
+                            <select class="form-select" id="defaultTimeRange">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30" selected>Last 30 Days</option>
+                                <option value="90">Last 90 Days</option>
+                                <option value="365">Last Year</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="showBioImpact" checked>
+                                <label class="form-check-label" for="showBioImpact">Show Biological Impact by Default</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="showHumanImpact" checked>
+                                <label class="form-check-label" for="showHumanImpact">Show Human Impact by Default</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="compactView">
+                                <label class="form-check-label" for="compactView">Compact View</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification Preferences -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="bi bi-bell-fill"></i> Notification Preferences</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="notifyCritical" checked>
+                                <label class="form-check-label" for="notifyCritical">Notify on Critical Threats</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="notifyHigh" checked>
+                                <label class="form-check-label" for="notifyHigh">Notify on High Priority Threats</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="notifySoleSource">
+                                <label class="form-check-label" for="notifySoleSource">Notify on Sole Source Dependencies</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="notifyNewSources">
+                                <label class="form-check-label" for="notifyNewSources">Notify on New Data Source Updates</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Settings -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0"><i class="bi bi-person"></i> Account Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="userEmail" value="user@example.com" readonly>
+                            <small class="text-muted">Contact administrator to change email</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Organization</label>
+                            <input type="text" class="form-control" id="userOrganization" value="Bio-ISAC Member" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <input type="text" class="form-control" id="userRole" value="Security Analyst" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-outline-primary" onclick="changePassword()">
+                                <i class="bi bi-key"></i> Change Password
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="row">
+            <div class="col-12 text-end">
+                <button class="btn btn-primary btn-lg" onclick="saveSettings()">
+                    <i class="bi bi-save"></i> Save All Settings
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"
+    ></script>
+
+    <!-- Custom JS -->
+    <script src="./scripts/settings.js"></script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,133 @@
+/* BioShield AI Custom Styles */
+
+body {
+    background-color: #f5f5f5;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+}
+
+/* Threat List Items */
+.threat-item {
+    border-left: 4px solid #6c757d;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+
+.threat-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.threat-item.critical {
+    border-left-color: #dc3545;
+}
+
+.threat-item.high {
+    border-left-color: #ffc107;
+}
+
+.threat-item.medium {
+    border-left-color: #0dcaf0;
+}
+
+.threat-item.low {
+    border-left-color: #198754;
+}
+
+/* Score Badge */
+.score-badge {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.score-critical {
+    background-color: #dc3545;
+    color: white;
+}
+
+.score-high {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.score-medium {
+    background-color: #0dcaf0;
+    color: #000;
+}
+
+.score-low {
+    background-color: #198754;
+    color: white;
+}
+
+/* Affected Systems Tags */
+.affected-tag {
+    display: inline-block;
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    margin: 0.25rem 0.25rem 0.25rem 0;
+}
+
+/* Source Badge */
+.source-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Relevance Indicator */
+.relevance-high {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.relevance-medium {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.relevance-low {
+    color: #198754;
+    font-weight: 600;
+}
+
+/* Alert Animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.alert-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Chart Container */
+canvas {
+    max-width: 100%;
+    height: auto !important;
+}
+
+
+

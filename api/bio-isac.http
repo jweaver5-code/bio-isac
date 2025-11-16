@@ -1,0 +1,14 @@
+@bio_isac_HostAddress = http://localhost:5231
+
+### Get all vulnerabilities
+GET {{bio_isac_HostAddress}}/api/vulnerabilities
+Accept: application/json
+
+### Get vulnerability statistics
+GET {{bio_isac_HostAddress}}/api/vulnerabilities/stats
+Accept: application/json
+
+###
+
+
+

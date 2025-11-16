@@ -1,0 +1,40 @@
+What the project is:
+BioShield AI is a cybersecurity tool that uses artificial intelligence (AI) to help the Bio-ISAC community (organizations in the biotech and life sciences sector) quickly understand which security threats matter most.
+Right now, organizations receive huge amounts of vulnerability data — reports of weaknesses in software or systems that hackers might exploit. This data often comes from many different places (like EU vulnerability databases, CVE reports, etc.) and can be overwhelming to analyze manually.
+BioShield AI will collect, organize, and analyze all that information automatically. Then, using AI, it will rank the vulnerabilities by how dangerous or relevant they are to biotech systems. This helps Bio-ISAC members focus their time and resources on the most serious threats first, rather than being buried under thousands of alerts.
+What it does (in simple terms):
+Collects cybersecurity vulnerability data from trusted sources (like European Union threat databases).
+Analyzes the data using AI to understand which vulnerabilities could most likely affect biotech systems.
+Prioritizes the threats — it gives each one a score or ranking so users can see what needs attention first.
+Displays results in a clear dashboard, showing the top risks and trends over time.
+Alerts members automatically when new, high-risk vulnerabilities are discovered.
+Why it’s valuable:
+It turns complex, technical data into clear, actionable insights.
+It saves time for Bio-ISAC members by focusing their attention on the most critical issues.
+It helps protect biotech infrastructure from cyber threats faster and more effectively.
+It encourages collaboration and shared awareness across Bio-ISAC’s member organizations.
+ 
+
+ Project: BioShield AI
+The Business Problem:
+Organizations in the biotechnology and life sciences fields rely heavily on technology — from lab equipment and software to research databases. Unfortunately, all these systems can have security weaknesses, called vulnerabilities, that hackers might use to break in or steal sensitive data.
+Every day, thousands of new vulnerabilities are reported around the world. The problem is that there’s too much information for anyone to go through manually. Most biotech organizations don’t have the time or expertise to figure out which threats are truly serious and which ones can wait. This means important risks can get missed — and that can lead to data breaches or costly downtime.
+Our Solution:
+We’re building BioShield AI, a smart system that helps biotechnology companies quickly understand which security threats matter most.
+Think of it like a digital “threat filter” — it takes in all the overwhelming security data from trusted sources (like European cybersecurity databases) and uses artificial intelligence to make sense of it.
+The system then highlights only the most important issues, telling members of the Bio-ISAC (a community of biotech organizations focused on cybersecurity) exactly where to focus their attention first.
+How It Works (in simple terms):
+Collects Information:
+BioShield AI automatically gathers security reports from multiple official databases.
+Understands the Data:
+The AI reads through all that technical information and figures out which vulnerabilities could actually impact biotech systems — for example, lab software, medical research tools, or DNA analysis programs.
+Prioritizes the Threats:
+It gives each issue a score, showing which ones are the most dangerous or urgent.
+Shares Easy-to-Read Results:
+The results are shown in a simple online dashboard — kind of like a “to-do list” for cybersecurity. It shows the top threats, explains why they matter, and updates in real time when new risks appear.
+Why It Matters:
+With BioShield AI, biotech companies won’t have to dig through thousands of confusing reports anymore. Instead, they’ll instantly see:
+Which security problems need to be fixed first
+How serious each one is
+How the overall threat level is changing over time
+This helps them save time, make faster decisions, and stay protected from major cyberattacks — all while sharing information across the Bio-ISAC community to strengthen everyone’s defenses.
