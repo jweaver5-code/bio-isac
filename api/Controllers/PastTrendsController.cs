@@ -12,7 +12,7 @@ public class PastTrendsController : ControllerBase
 
     public PastTrendsController(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection") ?? "Data Source=./api/database.db";
+        _connectionString = configuration.GetConnectionString("DefaultConnection") ?? "Data Source=database.db";
     }
 
     // GET: api/pasttrends
@@ -92,6 +92,28 @@ public class PastTrendsController : ControllerBase
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
+            // Get vulnerability info for comment (before update)
+            string? cveId = null;
+            string? title = null;
+            double? oldRating = null;
+            var getVulnQuery = "SELECT cve_id, title, user_rating FROM vulnerabilities WHERE id = @id";
+            using (var getCommand = new SqliteCommand(getVulnQuery, connection))
+            {
+                getCommand.Parameters.AddWithValue("@id", id);
+                using var reader = getCommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    cveId = reader.GetString(0);
+                    title = reader.GetString(1);
+                    oldRating = reader.IsDBNull(2) ? null : reader.GetDouble(2);
+                }
+                else
+                {
+                    return NotFound(new { error = "Vulnerability not found" });
+                }
+            }
+
+            // Now update the vulnerability
             var updateQuery = @"
                 UPDATE vulnerabilities 
                 SET user_rating = @userRating,
@@ -110,6 +132,14 @@ public class PastTrendsController : ControllerBase
                 return NotFound(new { error = "Vulnerability not found" });
             }
 
+            // Create activity comment
+            var author = request.Author ?? "System";
+            var commentContent = oldRating.HasValue
+                ? $"Updated rating from {oldRating.Value:F1} to {request.Rating:F1} for {cveId}: {title}"
+                : $"Set rating to {request.Rating:F1} for {cveId}: {title}";
+            
+            CreateActivityComment(connection, author, commentContent, id, "action", "updated");
+
             return Ok(new { message = "Rating updated successfully" });
         }
         catch (Exception ex)
@@ -127,7 +157,26 @@ public class PastTrendsController : ControllerBase
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
 
-            // If user rating is provided, update it; otherwise just mark as reviewed
+            // Get vulnerability info for comment (before update)
+            string? cveId = null;
+            string? title = null;
+            var getVulnQuery = "SELECT cve_id, title FROM vulnerabilities WHERE id = @id";
+            using (var getCommand = new SqliteCommand(getVulnQuery, connection))
+            {
+                getCommand.Parameters.AddWithValue("@id", id);
+                using var reader = getCommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    cveId = reader.GetString(0);
+                    title = reader.GetString(1);
+                }
+                else
+                {
+                    return NotFound(new { error = "Vulnerability not found" });
+                }
+            }
+
+            // Now update the vulnerability
             var updateQuery = request?.KeepCurrentRating == true
                 ? @"
                     UPDATE vulnerabilities 
@@ -150,6 +199,11 @@ public class PastTrendsController : ControllerBase
             {
                 return NotFound(new { error = "Vulnerability not found" });
             }
+
+            // Create activity comment
+            var author = request?.Author ?? "System";
+            var commentContent = $"Marked as reviewed: {cveId}: {title}";
+            CreateActivityComment(connection, author, commentContent, id, "action", "reviewed");
 
             return Ok(new { message = "Marked as reviewed successfully" });
         }
@@ -209,15 +263,40 @@ public class PastTrendsController : ControllerBase
             return StatusCode(500, new { error = ex.Message });
         }
     }
+
+    // Helper method to create activity comments
+    private void CreateActivityComment(SqliteConnection connection, string author, string content, int vulnerabilityId, string commentType, string action)
+    {
+        try
+        {
+            var insertQuery = @"
+                INSERT INTO comments (content, author, vulnerability_id, comment_type, action, created_at)
+                VALUES (@content, @author, @vulnerabilityId, @commentType, @action, datetime('now'))";
+
+            using var command = new SqliteCommand(insertQuery, connection);
+            command.Parameters.AddWithValue("@content", content);
+            command.Parameters.AddWithValue("@author", author);
+            command.Parameters.AddWithValue("@vulnerabilityId", vulnerabilityId);
+            command.Parameters.AddWithValue("@commentType", commentType);
+            command.Parameters.AddWithValue("@action", action);
+            command.ExecuteNonQuery();
+        }
+        catch
+        {
+            // Silently fail if comment creation fails - don't break the main operation
+        }
+    }
 }
 
 public class UpdateRatingRequest
 {
     public double Rating { get; set; }
+    public string? Author { get; set; }
 }
 
 public class MarkReviewedRequest
 {
     public bool KeepCurrentRating { get; set; } = false;
+    public string? Author { get; set; }
 }
 

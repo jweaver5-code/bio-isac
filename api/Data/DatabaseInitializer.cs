@@ -86,6 +86,24 @@ public static class DatabaseInitializer
             command.ExecuteNonQuery();
         }
 
+        // Create comments table
+        var createCommentsTable = @"
+            CREATE TABLE IF NOT EXISTS comments (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT NOT NULL,
+                author TEXT NOT NULL,
+                vulnerability_id INTEGER,
+                comment_type TEXT DEFAULT 'general',
+                action TEXT DEFAULT '',
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (vulnerability_id) REFERENCES vulnerabilities(id) ON DELETE CASCADE
+            )";
+
+        using (var command = new SqliteCommand(createCommentsTable, connection))
+        {
+            command.ExecuteNonQuery();
+        }
+
         // Insert sample vulnerabilities if table is empty
         var checkCount = "SELECT COUNT(*) FROM vulnerabilities";
         using (var command = new SqliteCommand(checkCount, connection))
