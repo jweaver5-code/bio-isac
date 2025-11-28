@@ -1,6 +1,8 @@
 // Enhanced BioShield AI Dashboard with Advanced Features
 
-const API_BASE_URL = 'http://localhost:5231/api';
+// Use existing API_BASE_URL if defined, otherwise set it (avoid redeclaration error)
+var API_BASE_URL = window.API_BASE_URL || 'http://localhost:5231/api';
+window.API_BASE_URL = API_BASE_URL;
 
 // Initialize enhanced dashboard
 document.addEventListener('DOMContentLoaded', () => {

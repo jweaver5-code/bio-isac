@@ -138,6 +138,53 @@
             </div>
         </div>
 
+        <!-- Comments & Activity Section -->
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-chat-left-text"></i> Comments & Activity Tracking</h5>
+                            <div>
+                                <button class="btn btn-sm btn-warning me-2" onclick="verifyAllAiRatings()" title="Double-check all AI ratings">
+                                    <i class="bi bi-shield-check"></i> Verify AI Ratings
+                                </button>
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addCommentModal">
+                                    <i class="bi bi-plus-circle"></i> Add Comment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs mb-3" id="commentsTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="all-comments-tab" data-bs-toggle="tab" data-bs-target="#all-comments" type="button">
+                                    <i class="bi bi-chat-dots"></i> All Comments
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button">
+                                    <i class="bi bi-clock-history"></i> Activity Feed
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="commentsTabContent">
+                            <div class="tab-pane fade show active" id="all-comments" role="tabpanel">
+                                <div id="commentsList" style="max-height: 400px; overflow-y: auto;">
+                                    <!-- Comments will be loaded here -->
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="activity" role="tabpanel">
+                                <div id="fullActivityFeed" style="max-height: 400px; overflow-y: auto;">
+                                    <!-- Full activity feed will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Content Row -->
         <div class="row">
             <!-- Top Threats Section -->
@@ -192,13 +239,25 @@
                 </div>
 
                 <!-- Data Sources -->
-                <div class="card">
+                <div class="card mb-4">
                     <div class="card-header bg-dark text-white">
                         <h5 class="mb-0"><i class="bi bi-database"></i> Data Sources</h5>
                     </div>
                     <div class="card-body" style="max-height: 300px; overflow-y: auto;">
                         <div id="dataSourcesList">
                             <!-- Data sources will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Feed -->
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-activity"></i> Recent Activity</h5>
+                    </div>
+                    <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                        <div id="activityFeed">
+                            <!-- Activity feed will be loaded here -->
                         </div>
                     </div>
                 </div>
@@ -292,6 +351,50 @@
         </div>
     </div>
 
+    <!-- Add Comment Modal -->
+    <div class="modal fade" id="addCommentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-chat-left-text"></i> Add Comment</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCommentForm">
+                        <div class="mb-3">
+                            <label class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="commentAuthor" required placeholder="Enter your name">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Comment Type</label>
+                            <select class="form-select" id="commentType" required>
+                                <option value="general">General Comment</option>
+                                <option value="vulnerability">Vulnerability Comment</option>
+                                <option value="action">Action Taken</option>
+                                <option value="update">Update</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Action (Optional)</label>
+                            <input type="text" class="form-control" id="commentAction" placeholder="e.g., reviewed, updated, resolved">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Related Vulnerability ID (Optional)</label>
+                            <input type="number" class="form-control" id="commentVulnerabilityId" placeholder="Leave empty for general comment">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Comment</label>
+                            <textarea class="form-control" id="commentContent" rows="4" required placeholder="Enter your comment..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send"></i> Submit Comment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS Bundle -->
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -302,6 +405,7 @@
     <!-- Custom JS -->
     <script src="./scripts/dashboard.js"></script>
     <script src="./scripts/enhanced-dashboard.js"></script>
+    <script src="./scripts/comments.js"></script>
     <script>
         // Handle new ticket form submission
         document.getElementById('newTicketForm')?.addEventListener('submit', async (e) => {

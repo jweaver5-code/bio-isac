@@ -405,13 +405,21 @@ async function saveRating() {
         return;
     }
     
+    // Get author name (use stored name or prompt)
+    let author = localStorage.getItem('userName') || prompt('Please enter your name:');
+    if (!author) {
+        alert('Name is required to track activity.');
+        return;
+    }
+    localStorage.setItem('userName', author);
+
     try {
         const response = await fetch(`${API_BASE_URL}/pasttrends/${currentThreatId}/rating`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ rating: rating })
+            body: JSON.stringify({ rating: rating, author: author })
         });
         
         if (!response.ok) {
@@ -439,13 +447,21 @@ async function saveRating() {
 
 // Mark as reviewed
 async function markAsReviewed(threatId) {
+    // Get author name (use stored name or prompt)
+    let author = localStorage.getItem('userName') || prompt('Please enter your name:');
+    if (!author) {
+        alert('Name is required to track activity.');
+        return;
+    }
+    localStorage.setItem('userName', author);
+
     try {
         const response = await fetch(`${API_BASE_URL}/pasttrends/${threatId}/review`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ keepCurrentRating: true })
+            body: JSON.stringify({ keepCurrentRating: true, author: author })
         });
         
         if (!response.ok) {
